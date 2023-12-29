@@ -1,0 +1,19 @@
+
+# Building the Docker Image
+docker build -t flask-app .
+
+# Running the Docker Container Locally
+docker run -p 5000:5000 flask-app
+
+
+# Deploying to Kubernetes
+kubectl apply -f k8s_deployment.yaml
+kubectl apply -f LoadBalancer.yaml
+kubectl apply -f ClusterIP.yaml
+
+
+# Deployin the curl pod
+kubectl apply -f curl-pod.yaml
+
+
+kubectl exec -it curl-pod -- curl <flask-service-ip>:5000

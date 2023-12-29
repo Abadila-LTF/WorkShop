@@ -1,0 +1,40 @@
+version: '3'
+services:
+  spaceland_db:
+    container_name: spaceland_db
+    image: postgres
+    environment:
+      - POSTGRES_USER=alien
+      - POSTGRES_PASSWORD=alienpass
+      - POSTGRES_DB=spaceland
+    volumes:
+      - /Users/abadila/Desktop/workshop/kubernets/app/db:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5555:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alien -d spaceland"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  spaceland_backend:
+    container_name: spaceland_backend
+    image: alaktif9/sl_backend:0.0.2
+    environment:
+      - DB_USERNAME=alien
+      - DB_PASSWORD=alienpass
+      - DB_NAME=spaceland
+      - DB_HOST=spaceland_db
+      - DB_PORT=5432
+    depends_on: 
+      - spaceland_db
+    ports:
+      - 9090:9090
+  spaceland_front:
+    container_name: spaceland_front
+    image: alaktif9/sl_front:0.0.2
+    depends_on: 
+      - spaceland_db
+      - spaceland_backend
+    ports:
+      - 80:80

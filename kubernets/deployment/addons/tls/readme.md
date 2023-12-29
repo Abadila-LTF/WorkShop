@@ -1,0 +1,1 @@
+https://cert-manager.io/v1.6-docs/configuration/acme/dns01/google/
